@@ -13,6 +13,40 @@ type Content interface {
 	Text() string
 }
 
+// Bytes returns a Content containing the b as its data.
+func Bytes(b []byte) Content {
+	return contentBytes(b)
+}
+
+// String returns a Content containing the s as its data.
+func String(s string) Content {
+	return contentString(s)
+}
+
+type contentBytes []byte
+
+var _ Content = contentBytes(nil)
+
+func (c contentBytes) Data() []byte {
+	return []byte(c)
+}
+
+func (c contentBytes) Text() string {
+	return string(c)
+}
+
+type contentString string
+
+var _ Content = contentString("")
+
+func (c contentString) Data() []byte {
+	return []byte(c)
+}
+
+func (c contentString) Text() string {
+	return string(c)
+}
+
 // Event is a broadcast message from the server to all clients.  Unlike Msg an
 // event does not have an associated session identifier because it is intended
 // for all clients.
@@ -34,9 +68,38 @@ type Msg interface {
 }
 
 func newEvent(c Content, t func() Time) Event {
-	return nil
+	event := &simpleEvent{t(), c}
+	return event
+}
+
+type simpleEvent struct {
+	t Time
+	Content
+}
+
+var _ Event = &simpleEvent{}
+
+func (event *simpleEvent) Time() Time {
+	return event.t
 }
 
 func newMsg(session string, c Content, t func() Time) Msg {
-	return nil
+	msg := &simpleMsg{session, t(), c}
+	return msg
+}
+
+type simpleMsg struct {
+	sess string
+	t    Time
+	Content
+}
+
+var _ Msg = &simpleMsg{}
+
+func (msg *simpleMsg) Session() string {
+	return msg.sess
+}
+
+func (msg *simpleMsg) Time() Time {
+	return msg.t
 }

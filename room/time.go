@@ -16,7 +16,7 @@ type dumbTime struct {
 	t uint64
 }
 
-func (t *dumbTime) Time() Time {
+func (t *dumbTime) Now() Time {
 	now := atomic.AddUint64(&t.t, 1)
 	return t64(now)
 }

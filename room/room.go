@@ -77,7 +77,7 @@ func newRoomBus(addr string, fn func(msg Msg)) (*roomBus, error) {
 
 // Event broadcasts an event to all client sessions.
 func (b *roomBus) Event(c Content) error {
-	event := newEvent(c, dt.Time)
+	event := newEvent(c, dt.Now)
 	b.eventsin <- event
 	return nil
 }
