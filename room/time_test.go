@@ -13,3 +13,10 @@ func TestDumbTime(t *testing.T) {
 		t.Errorf("t2: %v", t2)
 	}
 }
+
+func TestT64(t *testing.T) {
+	t1 := t64(0xDEADBEEF12345678)
+	if t1.String() != "deadbeef12345678" {
+		t.Errorf("t1: %v", t1)
+	}
+}
