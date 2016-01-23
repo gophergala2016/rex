@@ -30,9 +30,9 @@ in REx communication.
 ###Discovery
 
 Zeroconf (mDNS) is used for discovery over the LAN.  When the server
-application starts a bus is created by REx. After bus is bound to a random
-port, and REx begins listening an mDNS service record is configured
-specificying the port on which REx clients should connect.
+application starts a bus is created by REx. After the bus is bound to a random
+port and REx begins listening an mDNS service record is configured specificying
+the port on which REx clients should connect.
 
 ###Client Sessions
 
