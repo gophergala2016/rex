@@ -1,3 +1,16 @@
 language: go
 go:
   - 1.5
+
+before_install:
+  - mkdir /tmp/bin
+  - go get -u github.com/Masterminds/glide
+  - wget -O /tmp/lark.tar.gz https://github.com/bmatsuo/lark/releases/download/v0.1.0/lark-0_1_0-linux-amd64.tar.gz
+  - tar -C /tmp -xvzf lark.tar.gz
+  - mv /tmp/lark-0_1_0-linux-amd64/bin/lark $(go env | grep GOPATH | sed 's/*=//')/bin
+
+install:
+  - glide install
+
+script:
+  - lark test
