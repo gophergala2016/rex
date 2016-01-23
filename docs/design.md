@@ -24,8 +24,8 @@ server (discovery) and how messages/events are delivered between the two.  The
 bus uses HTTP an a transport protocol (though this is abstracted by the rex
 library).  The endpoints used for communication are described here but the
 content of requests and responses is not described.  Refer to the communication
-protocol [docs](#) for more information about HTTP entities involved in REx
-communication.
+protocol [docs](protocol.md) for more information about HTTP entities involved
+in REx communication.
 
 ###Discovery
 
