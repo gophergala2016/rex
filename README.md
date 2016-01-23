@@ -1,4 +1,4 @@
-#Room Experiences (REx)
+#Room Experiences (REx) [![Build Status](https://travis-ci.org/bmatsuo/rex.svg?branch=master)](https://travis-ci.org/bmatsuo/rex)
 
 REx is an experiment attempting to advance the design space of applications and
 games running on TV set-top box (Android TV in this case).  REx takes advantage
