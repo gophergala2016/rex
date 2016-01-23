@@ -112,7 +112,7 @@ games like [Spaceteam](http://www.sleepingbeastgames.com/spaceteam/) have
 delivered very fun and compelling experiences using only local network
 discovery.  These games unquestionably demonstrate the ease of use and low
 barrier to entry this approach provides over other global discovery engines.
-Users do not need to create an account, the launch right into the fun.  And it
+Users do not need to create an account; they launch right into the fun.  And it
 is a special kind of fun.
 
 The resurgence of local co-op in videogames like
