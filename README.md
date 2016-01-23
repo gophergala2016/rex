@@ -1,9 +1,9 @@
 #Room Experiences (REx) [![Build Status](https://travis-ci.org/gophergala2016/rex.svg?branch=master)](https://travis-ci.org/gophergala2016/rex) [![GoDoc](https://godoc.org/github.com/gophergala2016/rex/room?status.svg)](https://godoc.org/github.com/gophergala2016/rex/room)
 
 REx is an experiment attempting to advance the design space of applications and
-games running on TV set-top box (Android TV in this case).  REx takes advantage
-of an underutilized application architucture to provide rich experience shared
-by the entire room.
+games running on TV set-top boxes (Android TV in this case).  REx takes
+advantage of an underutilized application architucture to provide rich
+experience shared by the entire room.
 
 REx pairs an Android TV application with mobile client applications running on
 consumer phones (Android and iOS) or custom hardware.  The desired effect is
