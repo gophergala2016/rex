@@ -71,10 +71,10 @@ multiple mobile platforms to target (and potentially multiple TV plaforms).
 Any sane developer putting themselves in these circumstances would want
 cross-platform development libraries and tools.  Furthermore, the truly sane
 would ask not to use C(++) for all their development. Luckily these objects are
-inline with those of the blessed ["gomobile"](https://github.com/golang/mobile)
-project (blessed by Google).  Go's cross-platform toolchain unifies iOS (tvOS?)
-and Android application development and allows a single team to maintain the
-entire game platform.
+inline with those of the ["gomobile"](https://github.com/golang/mobile) project
+(blessed by Google).  Go's cross-platform toolchain unifies iOS (tvOS?) and
+Android application development and allows a single team to maintain the entire
+game platform.
 
 What's **more**, when an application grows to also require dynamic cloud-based
 applications Go easily extends it reach there and allows you develop the
