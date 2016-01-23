@@ -70,12 +70,13 @@ func busEventsHandler(b *bus) http.HandlerFunc {
 
 		enc := json.NewEncoder(w)
 		for sub.Next() {
+			event := sub.Event()
 			m := map[string]interface{}{
 				"index": event.Index(),
 				"time":  event.Time(),
 				"data":  event.Text(),
 			}
-			err = enc.Encode(m)
+			err := enc.Encode(m)
 			if err != nil {
 				log.Printf("[INFO] failed to deliver event to client: %v", err)
 				return
@@ -99,7 +100,7 @@ func busMessagesHandler(b *bus) http.HandlerFunc {
 			var resp string
 			switch e := err.(type) {
 			case *json.SyntaxError:
-				resp := e.Error()
+				resp = e.Error()
 			default:
 				resp = "could not read a complete entity"
 			}
