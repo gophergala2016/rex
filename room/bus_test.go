@@ -3,10 +3,12 @@ package room
 import (
 	"testing"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 func TestBus(t *testing.T) {
-	b := newBus(nil)
+	b := NewBus(nil)
 	b.close()
 }
 
@@ -22,7 +24,7 @@ func TestBusMessage(t *testing.T) {
 	}()
 
 	m := make(chan Msg)
-	h := func(msg Msg) {
+	h := hfunc(func(ctx context.Context, msg Msg) {
 		defer close(done)
 		timeout := time.After(time.Second)
 		select {
@@ -30,11 +32,11 @@ func TestBusMessage(t *testing.T) {
 			t.Errorf("timeout delivering message")
 		case m <- msg:
 		}
-	}
+	})
 
 	session := "test session"
 	content := String("test message")
-	b := newBus(h)
+	b := NewBus(context.Background(), h)
 	defer b.close()
 	b.Message(session, content)
 
@@ -53,7 +55,7 @@ func TestBusMessage(t *testing.T) {
 }
 
 func TestBusSubscription(t *testing.T) {
-	b := newBus(nil)
+	b := NewBus(context.Background())
 
 	content := String("this is a test")
 

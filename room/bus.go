@@ -1,13 +1,37 @@
 package room
 
 import (
+	"fmt"
 	"sync"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
-type bus struct {
-	handler   func(msg Msg)
-	term      chan struct{}
+// Handler is a bus message handler.
+type Handler interface {
+	HandleMessage(ctx context.Context, msg Msg)
+}
+
+// handlerFunc implement Handler
+type handlerFunc func(context.Context, Msg)
+
+func hfunc(fn func(ctx context.Context, msg Msg)) Handler {
+	return handlerFunc(fn)
+}
+
+func (fn handlerFunc) HandleMessage(ctx context.Context, msg Msg) {
+	fn(ctx, msg)
+}
+
+// Bus is the communication bus for a Server.
+type Bus struct {
+	ctx  context.Context
+	term chan struct{}
+
+	hmut     sync.RWMutex
+	handlers []Handler
+
 	sub       chan chan<- int
 	eventsin  chan Event
 	events    []Event // The history of events
@@ -15,20 +39,21 @@ type bus struct {
 	msgs      chan Msg
 }
 
-func newBus(handler func(msg Msg)) *bus {
-	b := &bus{}
+// NewBus initializes and returns a new Bus.
+func NewBus(ctx context.Context, handlers ...Handler) *Bus {
+	b := &Bus{}
 	b.init()
-	b.handler = handler
+	b.handlers = handlers
 	go b.msgLoop()
 	go b.eventLoop()
 	return b
 }
 
-func (b *bus) close() {
+func (b *Bus) close() {
 	close(b.term)
 }
 
-func (b *bus) init() {
+func (b *Bus) init() {
 	b.term = make(chan struct{})
 	b.sub = make(chan chan<- int)
 	b.eventsin = make(chan Event)
@@ -36,8 +61,8 @@ func (b *bus) init() {
 	b.msgs = make(chan Msg)
 }
 
-// Event broadcasts an event to all subscriptions.
-func (b *bus) Event(c Content) error {
+// Event broadcasts an event to all Subscription.
+func (b *Bus) Event(c Content) error {
 	event := newEvent(0, c, dt.Now)
 	b.eventsin <- event
 	return nil
@@ -45,30 +70,44 @@ func (b *bus) Event(c Content) error {
 
 // Message is called by a subscriber to signal back to the bus owner via
 // b.handler.
-func (b *bus) Message(session string, c Content) error {
+func (b *Bus) Message(session string, c Content) error {
 	msg := newMsg(session, c, dt.Now)
 	b.msgs <- msg
 	return nil
 }
 
+// AddHandler changes the bus message handler.
+func (b *Bus) AddHandler(h Handler) {
+	b.hmut.Lock()
+	defer b.hmut.Unlock()
+	b.handlers = append(b.handlers, h)
+}
+
+func (b *Bus) handle(msg Msg) {
+	b.hmut.RLock()
+	defer b.hmut.RUnlock()
+	ctx := withBus(b.ctx, b)
+	for _, h := range b.handlers {
+		h.HandleMessage(ctx, msg)
+	}
+}
+
 // msgLoop dispatches messages passed in with b.Message to b.handler.  Calls to
 // b.handler as serialized.  Concurrency must be handled at a higher level of
 // abstraction.
-func (b *bus) msgLoop() {
+func (b *Bus) msgLoop() {
 	for {
 		select {
 		case <-b.term:
 			// FIXME notify future callers of b.Message()
 			return
 		case msg := <-b.msgs:
-			if b.handler != nil {
-				b.handler(msg)
-			}
+			b.handle(msg)
 		}
 	}
 }
 
-func (b *bus) eventLoop() {
+func (b *Bus) eventLoop() {
 	defer b.eventsrdy.Broadcast()
 
 	for {
@@ -89,8 +128,9 @@ func (b *bus) eventLoop() {
 	}
 }
 
-func (b *bus) Subscribe(start int) *subscription {
-	s := &subscription{
+// Subscribe returns a new Subscription that new events from b.
+func (b *Bus) Subscribe(start int) *Subscription {
+	s := &Subscription{
 		term: make(chan struct{}),
 		req:  make(chan chan<- Event),
 	}
@@ -98,7 +138,7 @@ func (b *bus) Subscribe(start int) *subscription {
 	return s
 }
 
-func (b *bus) fulfill(start int, s *subscription) {
+func (b *Bus) fulfill(start int, s *Subscription) {
 	defer close(s.term)
 
 	i := start
@@ -132,21 +172,30 @@ func (b *bus) fulfill(start int, s *subscription) {
 	}
 }
 
-func (b *bus) Unsubscribe(s *subscription) {
+// Unsubscribe removes s from the recipients of b's events.  After Unsubscribe
+// returns no further events will be received in calls to s.Next().
+func (b *Bus) Unsubscribe(s *Subscription) {
 	s.close()
 }
 
-type subscription struct {
+// Subscription represents a remote client that needs to receive messages from
+// a Bus.
+type Subscription struct {
 	term  chan struct{}
 	req   chan chan<- Event
 	event Event
 }
 
-func (s *subscription) Event() Event {
+// Event returns the last received Event.
+func (s *Subscription) Event() Event {
 	return s.event
 }
 
-func (s *subscription) Next(timeout <-chan time.Time) (ok bool) {
+// Next waits for the next event to be received over the channel and returns
+// it.  If the subscription is terminated, or values is received over timeout
+// Next will return a value value.  Otherwise Next returns true and Event will
+// return the event received.
+func (s *Subscription) Next(timeout <-chan time.Time) (ok bool) {
 	c := make(chan Event)
 	select {
 	case <-timeout:
@@ -162,6 +211,27 @@ func (s *subscription) Next(timeout <-chan time.Time) (ok bool) {
 	}
 }
 
-func (s *subscription) close() {
+func (s *Subscription) close() {
 	close(s.req)
+}
+
+// Broadcast sends a broadcast event to all clients connected to the Bus
+// associated with ctx.
+func Broadcast(ctx context.Context, content Content) error {
+	b := contextBus(ctx)
+	if b == nil {
+		return fmt.Errorf("context has no associated bus")
+	}
+	return b.Event(content)
+}
+
+type busContextKey struct{}
+
+func withBus(ctx context.Context, b *Bus) context.Context {
+	return context.WithValue(ctx, busContextKey{}, b)
+}
+
+func contextBus(ctx context.Context) *Bus {
+	b, _ := ctx.Value(busContextKey{}).(*Bus)
+	return b
 }

@@ -24,8 +24,8 @@ type Room struct {
 // ServerConfig controls how a server advertises itself to potential clients as
 // well as miscelaneous communication behaviors.
 type ServerConfig struct {
-	Room    *Room
-	Handler func(msg Msg)
+	Room *Room
+	Bus  *Bus
 
 	// Addr is an optional address to bind.  If empty, the address of ":0" will
 	// be used.
@@ -35,11 +35,12 @@ type ServerConfig struct {
 // Server is a server used by a TV application to run a game or collaborative
 // procedure.
 type Server struct {
-	config  *ServerConfig
-	bus     *bus
-	handler *httpBus
-	tcp     *net.TCPListener
-	http    *http.Server
+	config   *ServerConfig
+	handler  *httpBus
+	tcp      *net.TCPListener
+	http     *http.Server
+	serving  chan struct{}
+	serveErr chan error
 }
 
 // NewServer initializes a new server, but does not start serving clients.
@@ -50,19 +51,18 @@ func NewServer(config *ServerConfig) *Server {
 
 	s := &Server{}
 	s.config = config
-	s.init()
+	s.initHTTP()
 
 	return s
 }
 
-func (s *Server) init() {
-	if s.bus != nil {
+func (s *Server) initHTTP() {
+	if s.handler != nil {
 		panic("already initialized")
 	}
-
-	s.bus = newBus(s.config.Handler)
-	s.handler = newHTTPBus(s.bus)
-
+	s.handler = newHTTPBus(s.bus())
+	s.serving = make(chan struct{})
+	s.serveErr = make(chan error, 1)
 	s.http = &http.Server{
 		Addr:         s.config.Addr, // FIXME not correct
 		Handler:      s.handler,
@@ -71,32 +71,81 @@ func (s *Server) init() {
 	}
 }
 
+func (s *Server) bus() *Bus {
+	return s.config.Bus
+}
+
+// Start binds the server to a port and beigns allowing clients to connect.
+// Start must not be called more than once.
+func (s *Server) Start() error {
+	go func() {
+		defer close(s.serveErr)
+		err := s.listenTCP()
+		if err != nil {
+			s.serveErr <- err
+			return
+		}
+		s.serveErr <- nil
+		s.serveErr <- s.http.Serve(s.tcp)
+	}()
+
+	err := <-s.serveErr
+	if err == nil {
+		// signal that we are serving clients
+		close(s.serving)
+	}
+	return err
+}
+
+// Wait returns when the server has terminated.  Wait must not be called more
+// than once.
+func (s *Server) Wait() error {
+	select {
+	case <-s.serving:
+		// we have started serving traffic... righteous.
+	default:
+		panic("Wait called before Start")
+	}
+	err, ok := <-s.serveErr
+	if !ok {
+		return fmt.Errorf("too main goroutines waiting")
+	}
+	return err
+}
+
 // Run binds to a random port, begins broadcasting service metadata using mDNS,
 // and begins streaming client events and dispatching client messages.
 // Typically, Run never returns a value. If any critical error is encountered
 // it will be returned.
+//
+// Run is equivalent to calling Start, followed by s.Wait.
 func (s *Server) Run() error {
-	err := s.listenTCP()
+	err := s.Start()
 	if err != nil {
 		return err
 	}
-	return s.http.Serve(s.tcp)
+	return s.Wait()
 }
 
 func (s *Server) listenTCP() error {
+	var err error
+	addr := s.config.Addr
 	laddr := &net.TCPAddr{}
-	host, _port, err := net.SplitHostPort(s.config.Addr)
-	if err != nil {
-		return err
+	if addr != "" {
+		host, _port, err := net.SplitHostPort(addr)
+		if err != nil {
+			return err
+		}
+		laddr.Port, err = strconv.Atoi(_port)
+		if err != nil {
+			return fmt.Errorf("invalid address port")
+		}
+		laddr.IP = net.ParseIP(host)
+		if laddr.IP == nil && host != "" {
+			return fmt.Errorf("invalid address host")
+		}
 	}
-	laddr.Port, err = strconv.Atoi(_port)
-	if err != nil {
-		return fmt.Errorf("invalid address port")
-	}
-	laddr.IP = net.ParseIP(host)
-	if laddr.IP == nil && host != "" {
-		return fmt.Errorf("invalid address host")
-	}
+
 	s.tcp, err = net.ListenTCP("tcp", laddr)
 	if err != nil {
 		return err
@@ -113,20 +162,20 @@ func (s *Server) Addr() string {
 // Event broadcasts c to all connected clients, giving it the next unused event
 // index.
 func (s *Server) Event(c Content) {
-	s.bus.Event(c)
+	s.bus().Event(c)
 }
 
-func newBusHandler(b *bus) http.Handler {
+func newBusHandler(b *Bus) http.Handler {
 	return newHTTPBus(b)
 }
 
 // httpBus exposes the bus functions Subscribe and Message over http endpoints.
 type httpBus struct {
-	b   *bus
+	b   *Bus
 	mux *http.ServeMux // FIXME use something that is faster
 }
 
-func newHTTPBus(b *bus) *httpBus {
+func newHTTPBus(b *Bus) *httpBus {
 	h := &httpBus{
 		b:   b,
 		mux: http.NewServeMux(),
@@ -149,7 +198,7 @@ func jsonMethodNotAllowed(allow ...string) string {
 	return jsonError("http_method_invalid", fmt.Sprintf("request method must be one of %v", allow))
 }
 
-func busEventsHandler(b *bus) http.HandlerFunc {
+func busEventsHandler(b *Bus) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			w.Header().Set("Allow", "GET")
@@ -198,7 +247,7 @@ func busEventsHandler(b *bus) http.HandlerFunc {
 	}
 }
 
-func busMessagesHandler(b *bus) http.HandlerFunc {
+func busMessagesHandler(b *Bus) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			w.Header().Set("Allow", "POST")

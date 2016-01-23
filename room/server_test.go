@@ -10,10 +10,12 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 func TestHTTPBusEvents(t *testing.T) {
-	b := newBus(nil)
+	b := NewBus(nil)
 	defer b.close()
 
 	go func() {
@@ -58,13 +60,13 @@ func TestHTTPBusEvents(t *testing.T) {
 func TestHTTPBusMessages(t *testing.T) {
 	msglock := &sync.Mutex{}
 	msg := []Msg{}
-	hmsg := func(m Msg) {
+	hmsg := hfunc(func(ctx context.Context, m Msg) {
 		msglock.Lock()
 		msg = append(msg, m)
 		msglock.Unlock()
-	}
+	})
 
-	b := newBus(hmsg)
+	b := NewBus(context.Background(), hmsg)
 	defer b.close()
 
 	h := newBusHandler(b)
