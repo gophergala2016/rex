@@ -10,6 +10,46 @@ import (
 	"github.com/bmatsuo/mdns"
 )
 
+// ServerDisco is a running instance of Room accesable at Addr.
+type ServerDisco struct {
+	Room    *Room
+	TCPAddr *net.TCPAddr
+	Entry   *mdns.ServiceEntry
+}
+
+// LookupRoom finds server applications with rooms that look like r.
+// LookupRoom ignores the instance name of advertised services and relies only
+// on the service identifier.
+//
+// BUG?  Not sure how mdns lookup handled channels when an error is
+// encountered.
+func LookupRoom(r *Room, servers chan<- *ServerDisco) error {
+	c := make(chan *mdns.ServiceEntry)
+	go func() {
+		for entry := range c {
+			var ip net.IP
+			if entry.AddrV4 != nil {
+				ip = entry.AddrV4
+			} else if entry.AddrV6 != nil {
+				ip = entry.AddrV6
+			}
+
+			tcpaddr := &net.TCPAddr{
+				IP:   ip,
+				Port: entry.Port,
+			}
+			addr := &ServerDisco{
+				Room:    r,
+				TCPAddr: tcpaddr,
+				Entry:   entry,
+			}
+
+			servers <- addr
+		}
+	}()
+	return mdns.Lookup(r.Service, c)
+}
+
 // ZoneConfig configures mDNS for a Room.
 type ZoneConfig struct {
 	Room *Room
