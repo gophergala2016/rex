@@ -1,6 +1,9 @@
 package room
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
 type bus struct {
 	handler   func(msg Msg)
@@ -143,9 +146,11 @@ func (s *subscription) Event() Event {
 	return s.event
 }
 
-func (s *subscription) Next() (ok bool) {
+func (s *subscription) Next(timeout <-chan time.Time) (ok bool) {
 	c := make(chan Event)
 	select {
+	case <-timeout:
+		return false
 	case <-s.term:
 		//log.Printf("sub: terminated")
 		return false

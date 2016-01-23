@@ -67,7 +67,7 @@ func TestBusSubscription(t *testing.T) {
 	defer b.Unsubscribe(s)
 
 	n := 0
-	for s.Next() {
+	for s.Next(nil) {
 		n++
 		event := s.Event()
 		if event.Text() != content.Text() {

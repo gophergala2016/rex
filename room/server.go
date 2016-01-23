@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func newBusHandler(b *bus) http.Handler {
@@ -66,10 +67,15 @@ func busEventsHandler(b *bus) http.HandlerFunc {
 		sub := b.Subscribe(start)
 		defer b.Unsubscribe(sub)
 
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
 		enc := json.NewEncoder(w)
-		for sub.Next() {
+		var timeout <-chan time.Time
+		for sub.Next(timeout) {
+			if timeout == nil {
+				timeout = time.After(time.Millisecond)
+			}
 			event := sub.Event()
 			m := map[string]interface{}{
 				"index": event.Index(),
@@ -95,13 +101,14 @@ func busMessagesHandler(b *bus) http.HandlerFunc {
 		}
 
 		msg := map[string]interface{}{}
-		err := json.NewDecoder(r.Body).Decode(msg)
+		err := json.NewDecoder(r.Body).Decode(&msg)
 		if err != nil {
 			var resp string
 			switch e := err.(type) {
 			case *json.SyntaxError:
 				resp = e.Error()
 			default:
+				log.Printf("[INFO] message i/o error: %v", err)
 				resp = "could not read a complete entity"
 			}
 			w.WriteHeader(http.StatusBadRequest)
@@ -110,6 +117,29 @@ func busMessagesHandler(b *bus) http.HandlerFunc {
 		}
 
 		log.Printf("[INFO] message received %v", msg)
+
+		var content string
+		_content, ok := msg["data"]
+		if ok {
+			content, ok = _content.(string)
+		}
+		if !ok {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintln(w, jsonError("protocol_error", "missing message content"))
+			return
+		}
+		var session string
+		_session, ok := msg["session"]
+		if ok {
+			session, ok = _session.(string)
+		}
+		if !ok {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintln(w, jsonError("protocol_error", "missing message content"))
+			return
+		}
+
+		b.Message(session, String(content))
 	}
 }
 
