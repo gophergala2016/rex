@@ -37,8 +37,8 @@ the port on which REx clients should connect.
 ###Client Sessions
 
 When a client is connecting to a server initially it needs to create a session
-that it will use in further communication.  A can session may span multiple
-network connections.
+that it will use in further communication.  A session may (and typically will)
+span multiple network connections.
 
 The client creates a session for itself by issuing an HTTP request to the
 server bus.
