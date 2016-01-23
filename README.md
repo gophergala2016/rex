@@ -21,7 +21,7 @@ Bryan Matsuo <bryan.matsuo@gmail.com>
 
 ##Copyright and License
 
-Copyright 2015 Bryan Matsuo
+Copyright 2016 Bryan Matsuo
 
 This project available under the MIT open source license.  See the
 [LICENSE](LICENSE) file for more information.
