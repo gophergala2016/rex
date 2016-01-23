@@ -89,10 +89,11 @@ history of Go and mobile platforms.
 ###Why write REx for Gopher Gala 2016?
 
 See the previous answer.  I wanted to create a novel and compelling experience.
-And I wanted to build my first real mobile application.  After looking over the
-gomobile project and how the development cycle goes I thought it would be
+And I wanted to build my first real mobile application (and really my first
+game with real graphics -- sorry they aren't very good).  After looking over
+the gomobile project and how the development cycle goes I thought it would be
 possible to create a really special interactive experience in a short amount of
-time.
+time, even with limited previous mobile and game development experience.
 
 ##Prior Art
 
