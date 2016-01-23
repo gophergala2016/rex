@@ -35,6 +35,65 @@ implementation of the game Egyptian Ratscrew.
 Useful for people trying to hack on REx and compile binaries and application
 archives themselvs.
 
+##Motivations
+
+###Why write REx?
+
+Honestly, I want to get together and play board games with my friends without
+having to spend all that money on physical pieces (and the effort/space to
+store and take care of them).  While many board games exist on mobile devices
+many don't offer a low friction multiplayer experience and often they lose some
+essense had playing the physical games with friends, sitting at a table.  It is
+exactly this feeling I am trying to replicate on a digital platform.  See [Prior Art](#Prior-Art) for more background.
+
+###Why write an application for a TV?
+
+See the previous answer.  I believe that a large shared place is key to
+replicating the board game experience in a fully digital application.  In this
+regard a TV functions almost identically to a table.  Furthermore the common
+shared space allows almost all **shared information** to be removed from the
+mobile interface.  This opens the possibility of implementing games involving
+more complex mechanics and player decision points revolving around **secrets**
+and **private information** (e.g. poker, Magic: The Gathering, etc).
+
+###Why use mobile "companion" applications?
+
+See the previous answer.  Games and applications relying on private information
+and complex mechanics including asymmetric player objectives/behaviors benefit
+greatly from a "controller" that has a (i) a display and (ii) programmable
+logic.  The [Prior Art](#Prior-Art) can provide more background on this topic.
+
+###Why write REx in Go?
+
+See the previous answer.  The REx architecture typically involves two
+applications being developed and sharing libraries.  What's more, there are
+multiple mobile platforms to target (and potentially multiple TV plaforms).
+Any sane developer putting themselves in these circumstances would want
+cross-platform development libraries and tools.  Furthermore, the truly sane
+would ask not to use C(++) for all their development. Luckily these objects are
+inline with those of the blessed ["gomobile"](https://github.com/golang/mobile)
+project (blessed by Google).  Go's cross-platform toolchain unifies iOS (tvOS?)
+and Android application development and allows a single team to maintain the
+entire game platform.
+
+What's **more**, when an application grows to also require dynamic cloud-based
+applications Go easily extends it reach there and allows you develop the
+virtuous path of Go servers connected with Go glue to Go mobile clients.  How
+does that bare metal feel?
+
+Hana Kim's [talk](https://www.youtube.com/watch?v=sQ6-HyPxHKg) from GopherCon
+2015 provides an execellent background of gomobile, its motivations, and its
+benefits.  The video is highly recommended as reference and background on the
+history of Go and mobile platforms.
+
+###Why write REx for Gopher Gala 2016?
+
+See the previous answer.  I wanted to create a novel and compelling experience.
+And I wanted to build my first real mobile application.  After looking over the
+gomobile project and how the development cycle goes I thought it would be
+possible to create a really special interactive experience in a short amount of
+time.
+
 ##Prior Art
 
 ###Games
