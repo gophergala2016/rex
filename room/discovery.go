@@ -2,6 +2,7 @@ package room
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"strconv"
@@ -47,7 +48,15 @@ func LookupRoom(r *Room, servers chan<- *ServerDisco) error {
 			servers <- addr
 		}
 	}()
-	return mdns.Lookup(r.Service, c)
+
+	params := mdns.DefaultParams(r.Service)
+	params.Entries = c
+	params.Timeout = time.Minute
+	err := mdns.Query(params)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // ZoneConfig configures mDNS for a Room.
@@ -72,7 +81,7 @@ func NewZoneConfig(s *Server) (*ZoneConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	if host != "" {
+	if host != "" && host != "::" {
 		ip := net.ParseIP(host)
 		if ip == nil {
 			return nil, fmt.Errorf("invalid host ip: %v", err)
@@ -89,24 +98,32 @@ func NewZoneConfig(s *Server) (*ZoneConfig, error) {
 
 // Instance returns the mdns instance identifier corresponding to zc.Room.Name.
 func (zc *ZoneConfig) Instance() string {
-	return fmt.Sprintf("%s_%d_%s", time.Now(), os.Getpid(), zc.Room.Name)
+	now := time.Now().Format("20060102150405")
+	return fmt.Sprintf("%s_%d_%s", now, os.Getpid(), zc.Room.Name)
 }
 
-func (zc *ZoneConfig) mdnsService() *mdns.MDNSService {
-	return &mdns.MDNSService{
-		Instance: zc.Instance(),
-		Service:  zc.Room.Service,
-		Port:     zc.Port,
-		IPs:      zc.IPs,
-		TXT:      zc.TXT,
+func (zc *ZoneConfig) mdnsService() (*mdns.MDNSService, error) {
+	return mdns.NewMDNSService(
+		zc.Instance(),
+		zc.Room.Service,
+		"",
+		"",
+		zc.Port,
+		zc.IPs,
+		zc.TXT,
+	)
+}
+
+func (zc *ZoneConfig) mdnsConfig(iface *net.Interface) (*mdns.Config, error) {
+	zone, err := zc.mdnsService()
+	if err != nil {
+		return nil, err
 	}
-}
-
-func (zc *ZoneConfig) mdnsConfig(iface *net.Interface) *mdns.Config {
-	return &mdns.Config{
-		Zone:  zc.mdnsService(),
+	config := &mdns.Config{
+		Zone:  zone,
 		Iface: iface,
 	}
+	return config, nil
 }
 
 // Discovery is an opaque type that contains an mDNS discovery server.
@@ -118,11 +135,16 @@ type Discovery interface {
 // DiscoveryServer returns a new Discovery server that is advertizing the Room
 // in zc.
 func DiscoveryServer(zc *ZoneConfig) (Discovery, error) {
-	config := zc.mdnsConfig(nil)
+	config, err := zc.mdnsConfig(nil)
+	if err != nil {
+		return nil, fmt.Errorf("invalid discovery configuration: %v", err)
+	}
+	log.Printf("[INFO] discovery configuration: %v", config.Zone)
 	srv, err := mdns.NewServer(config)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("[INFO] discover server started")
 	d := &mdnsDiscovery{srv: srv}
 	return d, nil
 }

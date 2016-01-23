@@ -48,6 +48,22 @@ func ServerMain(*cli.Context) {
 	}
 
 	log.Printf("[INFO] server running at %s", server.Addr())
+
+	log.Printf("[INFO] creating mDNS discovery server")
+	zc, err := room.NewZoneConfig(server)
+	if err != nil {
+		log.Printf("[FATAL] failed to initialize discovery")
+		fatal = true
+		return
+	}
+	disco, err := room.DiscoveryServer(zc)
+	if err != nil {
+		log.Printf("[FATAL] discovery server failed to start")
+		fatal = true
+		return
+	}
+	defer disco.Close()
+
 	err = server.Wait()
 	if err != nil {
 		log.Printf("[FATAL] %v", err)
