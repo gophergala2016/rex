@@ -5,7 +5,10 @@ import "testing"
 func TestEvent(t *testing.T) {
 	dt := &dumbTime{}
 	c1 := String("test content")
-	e1 := newEvent(c1, dt.Now)
+	e1 := newEvent(1234, c1, dt.Now)
+	if e1.Index() != 1234 {
+		t.Errorf("index: %v", e1.Index())
+	}
 	if e1.Text() != c1.Text() {
 		t.Errorf("content: %v", e1.Text())
 	}

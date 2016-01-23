@@ -51,6 +51,8 @@ func (c contentString) Text() string {
 // event does not have an associated session identifier because it is intended
 // for all clients.
 type Event interface {
+	Index() uint64
+
 	Time() Time
 
 	Content
@@ -67,17 +69,22 @@ type Msg interface {
 	Content
 }
 
-func newEvent(c Content, t func() Time) Event {
-	event := &simpleEvent{t(), c}
+func newEvent(i uint64, c Content, t func() Time) Event {
+	event := &simpleEvent{i, t(), c}
 	return event
 }
 
 type simpleEvent struct {
+	i uint64
 	t Time
 	Content
 }
 
 var _ Event = &simpleEvent{}
+
+func (event *simpleEvent) Index() uint64 {
+	return event.i
+}
 
 func (event *simpleEvent) Time() Time {
 	return event.t
