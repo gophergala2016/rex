@@ -44,7 +44,7 @@ having to spend all that money on physical pieces (and the effort/space to
 store and take care of them).  While many board games exist on mobile devices
 many don't offer a low friction multiplayer experience and often they lose some
 essense had playing the physical games with friends, sitting at a table.  It is
-exactly this feeling I am trying to replicate on a digital platform.  See [Prior Art](#Prior-Art) for more background.
+exactly this feeling I am trying to replicate on a digital platform.  See [Prior Art](#prior-art) for more background.
 
 ###Why write an application for a TV?
 
@@ -61,7 +61,7 @@ and **private information** (e.g. poker, Magic: The Gathering, etc).
 See the previous answer.  Games and applications relying on private information
 and complex mechanics including asymmetric player objectives/behaviors benefit
 greatly from a "controller" that has a (i) a display and (ii) programmable
-logic.  The [Prior Art](#Prior-Art) can provide more background on this topic.
+logic.  The [Prior Art](#prior-art) can provide more background on this topic.
 
 ###Why write REx in Go?
 
