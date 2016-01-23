@@ -1,0 +1,20 @@
+hash: 8220a337fa099b9af9c3e6bc567493d3a25611cf358e0480dc6780ad353d7a4e
+updated: 2016-01-23T05:57:04.202185433-08:00
+imports:
+- name: github.com/bmatsuo/mdns
+  version: d5af575d87337a9767cc2d80aa35661818ce1c0a
+- name: github.com/codegangsta/cli
+  version: f9cc3001e04f9783cb4ad08ca6791aa07134787c
+- name: github.com/miekg/dns
+  version: 5c01f20c3a6b2acb2b5222c0aa9732a2f219b4b3
+- name: golang.org/x/crypto
+  version: 3760e016850398b85094c4c99e955b8c3dea5711
+  repo: https://golang.org/x/crypto
+- name: golang.org/x/net
+  version: 2e9cee70ee697e0a2ef894b560dda50dec7dff58
+  subpackages:
+  - /context
+- name: golang.org/x/text
+  version: cf4986612c83df6c55578ba198316d1684a9a287
+  repo: https://golang.org/x/text
+devImports: []
