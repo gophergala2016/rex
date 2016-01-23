@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/mdns"
+	"github.com/bmatsuo/mdns"
 )
 
 // Config defines the service used for discovery.
