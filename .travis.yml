@@ -2,6 +2,9 @@ language: go
 go:
   - 1.5
 
+env:
+  - GO15VENDOREXPERIMENT=1
+
 before_install:
   - mkdir /tmp/bin
   - go get -u github.com/Masterminds/glide

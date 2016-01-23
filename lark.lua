@@ -1,5 +1,5 @@
 lark.task{'test', function()
-    lark.exec{'go', 'test', '-cover', './...'}
+    lark.exec{'sh', '-c', 'go test -cover $(glide novendor)'}
 end}
 
 lark.task{'push', function()
