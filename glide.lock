@@ -1,5 +1,5 @@
-hash: 73cfec33e323704f044bb470651ecd6fc78b8c302d32952ec4a7f36593d067f5
-updated: 2016-01-24T00:25:05.490471824-08:00
+hash: e4bea23ab5a427c7b97f36bd8bdcf67de11df35800db7e03b4b5b635ba28a3e6
+updated: 2016-01-24T14:10:53.502244764-08:00
 imports:
 - name: github.com/bmatsuo/mdns
   version: d5af575d87337a9767cc2d80aa35661818ce1c0a
@@ -19,6 +19,10 @@ imports:
   version: 7c492694a6443a92fd349fda0c4c7b587040f161
   subpackages:
   - /font
+- name: golang.org/x/mobile
+  version: e7f16ac590465f5cefa43feb920df4cbfc1c0e6a
+  subpackages:
+  - /app
 - name: golang.org/x/net
   version: 2e9cee70ee697e0a2ef894b560dda50dec7dff58
   subpackages:

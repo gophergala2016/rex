@@ -12,3 +12,6 @@ import:
 - package: golang.org/x/image
   subpackages:
   - /font
+- package: golang.org/x/mobile
+  subpackages:
+  - /app
