@@ -18,7 +18,7 @@ clients will see the triangle dance on the screen as you tap around.
 
 ##Usage
 
-First launch the server on you desktop or mobile device.  After the server is
+First launch the server on your desktop or mobile device.  After the server is
 running (it has a red background) launch the client application (it has a blue
 background).
 
