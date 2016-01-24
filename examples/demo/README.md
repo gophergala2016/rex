@@ -26,4 +26,6 @@ update it's triangle's position to the touch position.
 
 ##Screenshots
 
-TODO
+![Demo on desktop](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo.png)
+
+![Demo on TV](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo-tv.jpg)
