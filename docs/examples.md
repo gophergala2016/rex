@@ -13,7 +13,9 @@ one of the "android" tarballs and load the included .apk files onto their
 Android devices with installing the `gomobile` and Android development
 toolchains.
 
-##Setup (Android)
+##Installation (via gomobile)
+
+###Setup (Android)
 
 To target a platform follow all the typical setup for standard development
 using the native SDKs.
@@ -36,7 +38,7 @@ task.  OS X users can use Homebrew.
 
     brew install android-platform-tools
 
-##Running Examples Locally
+###Running Examples Locally
 
 The `go build` command is capable of compiling native binaries to run examples
 during development.
@@ -47,7 +49,7 @@ during development.
 
 The same process is used for building and running client apps.
 
-##Installing Examples
+###Installing Examples
 
 I, @bmatsuo, have had trouble using `gomobile install`, specifically with my
 Android TV (Nexus Player).  So I will just describe the build process using
@@ -63,3 +65,19 @@ First create the application archive (.apk or .app file) using `gomobile`.
 
 Copy the produced `rexserver.apk` file to an android device then install and
 open it.
+
+##Index
+
+###[Demo](../examples/demo)
+
+The demo provides a full example of the REx room framework's capabilities.
+Clients auto-discover and connect to server applications and synchronize their
+state when touches cause the client to update.
+
+![Demo screengrab](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo.png)
+
+###[Ratscrew](../examples/ratscrew)
+
+Unfortunately the full game example of Egyptian Ratscrew had to be postponed
+beyond the Gopher Gala 2016 as technical issues deploying autodiscovery to
+Android slowed overall progress.
