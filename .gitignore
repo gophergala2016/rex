@@ -1,2 +1,5 @@
 # the go vendor directory
 /vendor
+
+# the top level assets directory. each app needs its own directory
+/assets

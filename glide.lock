@@ -1,5 +1,5 @@
-hash: 7fcf4a5074bfb49a7b4afc5be9242d2085d639b4c00866e37e25fcdbd8a8cf04
-updated: 2016-01-23T20:45:35.190180186-08:00
+hash: 73cfec33e323704f044bb470651ecd6fc78b8c302d32952ec4a7f36593d067f5
+updated: 2016-01-24T00:25:05.490471824-08:00
 imports:
 - name: github.com/bmatsuo/mdns
   version: d5af575d87337a9767cc2d80aa35661818ce1c0a
@@ -7,10 +7,18 @@ imports:
   version: cccd189d45f7ac3368a0d127efb7f4d08ae0b655
 - name: github.com/codegangsta/cli
   version: f9cc3001e04f9783cb4ad08ca6791aa07134787c
+- name: github.com/golang/freetype
+  version: f29eb116deb328d02ee5c573f02d442ca67d5532
+  subpackages:
+  - /truetype
 - name: github.com/miekg/dns
   version: 5c01f20c3a6b2acb2b5222c0aa9732a2f219b4b3
 - name: golang.org/x/crypto
   version: 3760e016850398b85094c4c99e955b8c3dea5711
+- name: golang.org/x/image
+  version: 7c492694a6443a92fd349fda0c4c7b587040f161
+  subpackages:
+  - /font
 - name: golang.org/x/net
   version: 2e9cee70ee697e0a2ef894b560dda50dec7dff58
   subpackages:
