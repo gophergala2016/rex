@@ -11,11 +11,10 @@ similar to Nintendo's goals with the Wii U platform.  But the goal for REx is
 to provide a low barrier to entry by utilizing existing commodity phones and
 set-top boxes.
 
-This project delivers several examples to demonstrate the core technologies as
-well provide an engaging (playable) multiplayer game experience to drive home
-the concept.  But, the core deliverable is the open source messaging framework
-that can be used to build more advanced games when more resources (i.e. time
-and money) are available.
+This project examples to demonstrate the core technologies (unfortunately the
+full game demo had to be postponed!).  But, the core deliverable is the open
+source messaging framework that can be used to build more advanced games when
+more resources (i.e. time and money) are available.
 
 For more information about how a REx application works see the design
 [document](docs/design.md).
@@ -43,8 +42,7 @@ of REx and how they are used.  Important sections include the following:
 
 ####**[Examples](docs/examples.md)**
 
-Information about the examples provided with REx including a working
-implementation of the game Egyptian Ratscrew.
+Information about the examples provided with REx.
 
 ####**[Development](docs/development.md)**
 
@@ -106,11 +104,11 @@ history of Go and mobile platforms.
 ###Why write REx for Gopher Gala 2016?
 
 See the previous answer.  I wanted to create a novel and compelling experience.
-And I wanted to build my first real mobile application (and really my first
-game with real graphics -- sorry they aren't very good).  After looking over
-the gomobile project and how the development cycle goes I thought it would be
-possible to create a really special interactive experience in a short amount of
-time, even with limited previous mobile and game development experience.
+And I wanted to build my first mobile application (and really my first game
+using GL graphics).  After looking over the gomobile project and how the
+development cycle goes I thought it would be possible to create a cool, shared
+interactive experience in a short amount of time, even with limited previous
+mobile/game development experience.
 
 ##Prior Art
 
