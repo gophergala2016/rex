@@ -33,7 +33,8 @@ For more information about how a REx application works see the design
 - Game clients automically discover servers and begin receiving their updates
   events.  Works on Android devices (tested on Galaxy S6).  Untested for iOS.
 
-- Technical demo (with .apk files) showing discovery and state synchronization.
+- Technical [demo](examples/demo) (with .apk files) showing discovery and state
+  synchronization.
 
 ##Documentation
 
