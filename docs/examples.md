@@ -33,14 +33,11 @@ task.  OS X users can use Homebrew.
 The `go build` command is capable of compiling native binaries to run examples
 during development.
 
-    cd examples/ratscrew
-    go get -d ./...
+    cd examples/demo/cmd/rexserver
     go build ./cmd/rexserver
-    go build ./cmd/rexclient
+    ./rexserver
 
-The produces `rexserver` and `rexclient` binaries can be executed on your local
-machine and should work almost identically to how it will work installed on a
-device.
+The same process is used for building and running client apps.
 
 ##Installing Examples
 
@@ -53,10 +50,8 @@ phone is old news and copious information exists online for that.
 
 First create the application archive (.apk or .app file) using `gomobile`.
 
-    cd examples/ratscrew
+    cd examples/demo/cmd/rexserver
     gomobile build -target=android ./cmd/rexserver
-    gomobile build -target=android ./cmd/rexclient
 
-Copy the server .apk file to the TV using whatever method works for you (see
-link above).  Finally copy the client .apk file to your mobile device.  You
-should now be able to start and use both applications.
+Copy the produced `rexserver.apk` file to an android device then install and
+open it.
