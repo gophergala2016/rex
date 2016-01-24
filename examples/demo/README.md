@@ -14,8 +14,6 @@ Touch events move the sprite (green triangle) around the screen.  In this
 example though the touch events are passed to the server and all connected
 clients will see the triangle dance on the screen as you tap around.
 
-**SCREENSHOT**
-
 ##Usage
 
 First launch the server on your desktop or mobile device.  After the server is
