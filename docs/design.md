@@ -16,12 +16,12 @@ A REx server provides a bus by which client applications send (unicast)
 messages to the server application.  The server broadcasts an event log which
 clients use to update their state.  There is no way in the initial design for
 the server to unicast events to an individual client.  All clients receive the
-same messages and must filter out irrelavent updates.  This restriction could
+same messages and must filter out irrelevant updates.  This restriction could
 be lifted in the future but it simplifies the framework for now.
 
 The following sections describe how clients establish a connection with the
 server (discovery) and how messages/events are delivered between the two.  The
-bus uses HTTP an a transport protocol (though this is abstracted by the rex
+bus uses HTTP as a transport protocol (though this is abstracted by the REx
 library).  The endpoints used for communication are described here but the
 content of requests and responses is not described.  Refer to the communication
 protocol [docs](protocol.md) for more information about HTTP entities involved
@@ -31,7 +31,7 @@ in REx communication.
 
 Zeroconf (mDNS) is used for discovery over the LAN.  When the server
 application starts a bus is created by REx. After the bus is bound to a random
-port and REx begins listening an mDNS service record is configured specificying
+port and REx begins listening an mDNS service record is configured specifying
 the port on which REx clients should connect.
 
 ###Client Sessions
