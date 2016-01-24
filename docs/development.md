@@ -1,5 +1,7 @@
 #REx development
 
+##General
+
 Development should all be done with the locked dependency versions in
 glide.lock.  To install dependencies, make sure that the `GO15VENDOREXPERIMENT`
 environment variable is enabled is enabled.
@@ -19,3 +21,8 @@ a `make`.
     lark test
     lark ratscrew
     # ...
+
+##Examples
+
+The project examples require the gomobile toolchain in order to be compiled.
+For more information see the examples [documentation](examples.md).
