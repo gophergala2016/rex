@@ -30,7 +30,10 @@ The following screenshots and photos show the server (red) and several
 connected clients (light blue).  The state (last message time, number of
 messages, and triangle position) are synchronized between all processes.
 
-This first image shows the applications running on the same desktop.
+This first image shows the applications running on the same desktop.  The
+location of the triangle on each screen is synchronized when touch events
+occur.  The stats at the top of each screen are there to ensure the state of
+all devices are up to date.
 
 ![Demo on desktop](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo.png)
 
