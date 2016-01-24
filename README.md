@@ -2,7 +2,7 @@
 
 REx is an experiment attempting to advance the design space of applications and
 games running on TV set-top boxes (Android TV in this case).  REx takes
-advantage of an underutilized application architucture to provide rich
+advantage of an underutilized application architecture to provide rich
 experience shared by the entire room.
 
 REx pairs an Android TV application with mobile client applications running on
@@ -33,7 +33,7 @@ implementation of the game Egyptian Ratscrew.
 ####**[Development](docs/development.md)**
 
 Useful for people trying to hack on REx and compile binaries and application
-archives themselvs.
+archives themselves.
 
 ##Motivations
 
@@ -43,7 +43,7 @@ Honestly, I want to get together and play board games with my friends without
 having to spend all that money on physical pieces (and the effort/space to
 store and take care of them).  While many board games exist on mobile devices
 many don't offer a low friction multiplayer experience and often they lose some
-essense had playing the physical games with friends, sitting at a table.  It is
+essence had playing the physical games with friends, sitting at a table.  It is
 exactly this feeling I am trying to replicate on a digital platform.  See [Prior Art](#prior-art) for more background.
 
 ###Why write an application for a TV?
@@ -54,7 +54,7 @@ regard a TV functions almost identically to a table.  Furthermore the common
 shared space allows almost all **shared information** to be removed from the
 mobile interface.  This opens the possibility of implementing games involving
 more complex mechanics and player decision points revolving around **secrets**
-and **private information** (e.g. poker, Magic: The Gathering, etc).
+and **private information** (e.g. Poker, Magic: The Gathering, etc).
 
 ###Why use mobile "companion" applications?
 
@@ -67,7 +67,7 @@ logic.  The [Prior Art](#prior-art) can provide more background on this topic.
 
 See the previous answer.  The REx architecture typically involves two
 applications being developed and sharing libraries.  What's more, there are
-multiple mobile platforms to target (and potentially multiple TV plaforms).
+multiple mobile platforms to target (and potentially multiple TV platforms).
 Any sane developer putting themselves in these circumstances would want
 cross-platform development libraries and tools.  Furthermore, the truly sane
 would ask not to use C(++) for all their development. Luckily these objects are
@@ -82,7 +82,7 @@ virtuous path of Go servers connected with Go glue to Go mobile clients.  How
 does that bare metal feel?
 
 Hana Kim's [talk](https://www.youtube.com/watch?v=sQ6-HyPxHKg) from GopherCon
-2015 provides an execellent background of gomobile, its motivations, and its
+2015 provides an excellent background of gomobile, its motivations, and its
 benefits.  The video is highly recommended as reference and background on the
 history of Go and mobile platforms.
 
@@ -115,12 +115,12 @@ barrier to entry this approach provides over other global discovery engines.
 Users do not need to create an account; they launch right into the fun.  And it
 is a special kind of fun.
 
-The resurgence of local co-op in videogames like
+The resurgence of local co-op in video games like
 [Spelunky](http://www.spelunkyworld.com/) and the [Board Game
 Renaissance](http://www.theguardian.com/technology/2014/nov/25/board-games-internet-playstation-xbox)
 in recent years is evidence that local, in-person gaming utilizing a shared
 space can provide some experiences and feelings that are (as of yet)
-unatainable through internet based multiplayer experiences which are starkly
+unattainable through internet based multiplayer experiences which are starkly
 impersonal (which remain as starkly impersonal as the rest of the internet).
 
 These are long trends of entertainment and the REx project intends on helping
