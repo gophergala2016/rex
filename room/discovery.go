@@ -51,7 +51,7 @@ func LookupRoom(r *Room, servers chan<- *ServerDisco) error {
 
 	params := mdns.DefaultParams(r.Service)
 	params.Entries = c
-	params.Timeout = time.Minute
+	params.Timeout = 10 * time.Second
 	err := mdns.Query(params)
 	if err != nil {
 		return err
@@ -139,12 +139,12 @@ func DiscoveryServer(zc *ZoneConfig) (Discovery, error) {
 	if err != nil {
 		return nil, fmt.Errorf("invalid discovery configuration: %v", err)
 	}
-	log.Printf("[INFO] discovery configuration: %v", config.Zone)
+	log.Printf("[INFO] Discovery configuration: %v", config.Zone)
 	srv, err := mdns.NewServer(config)
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("[INFO] discover server started")
+	log.Printf("[INFO] Discovery server started")
 	d := &mdnsDiscovery{srv: srv}
 	return d, nil
 }

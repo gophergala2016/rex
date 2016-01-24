@@ -233,12 +233,8 @@ func busEventsHandler(b *Bus) http.HandlerFunc {
 				timeout = time.After(time.Millisecond)
 			}
 			event := sub.Event()
-			m := map[string]interface{}{
-				"index": event.Index(),
-				"time":  event.Time(),
-				"data":  event.Text(),
-			}
-			err := enc.Encode(m)
+			ejs := newJSONEvent(event)
+			err := enc.Encode(ejs)
 			if err != nil {
 				log.Printf("[INFO] failed to deliver event to client: %v", err)
 				return
