@@ -6,7 +6,7 @@ license that can be found in the LICENSE file.
 -->
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="co.bmats.gophergala.demorexclient"
+	package="co.bmats.gophergala.demorexserver"
 	android:versionCode="1"
 	android:versionName="1.0">
 
@@ -20,7 +20,7 @@ license that can be found in the LICENSE file.
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
 
-    <application android:label="REx Demo Client" android:debuggable="true">
+    <application android:label="REx Demo Server" android:debuggable="true">
 
 	<activity android:name="org.golang.app.GoNativeActivity"
 		android:label="network"

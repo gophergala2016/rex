@@ -4,22 +4,18 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"image"
 	_color "image/color"
-	"image/draw"
-	"io/ioutil"
 	"log"
 	"net"
 	"os"
+	"time"
 
-	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"github.com/gophergala2016/rex/examples/demo/rexdemo"
+	"github.com/gophergala2016/rex/examples/exutil/exfont"
 	"github.com/gophergala2016/rex/room"
 	"golang.org/x/image/font"
-	"golang.org/x/image/math/fixed"
 	"golang.org/x/mobile/app"
-	"golang.org/x/mobile/asset"
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
@@ -27,12 +23,19 @@ import (
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
 	"golang.org/x/mobile/exp/gl/glutil"
-	"golang.org/x/mobile/geom"
 	"golang.org/x/mobile/gl"
 	"golang.org/x/net/context"
 )
 
+const (
+	bgRed   = 224
+	bgGreen = 235
+	bgBlue  = 245
+)
+
 var (
+	remotePt chan RemotePoint
+	messages chan room.Content
 	demo     *DemoClient
 	images   *glutil.Images
 	fps      *debug.FPS
@@ -45,12 +48,15 @@ var (
 	statusFont    *truetype.Font
 	statusFace    font.Face
 	statusFaceOpt = &truetype.Options{}
-	statusPainter *DemoStatusPainter
-	statusBG      = image.NewUniform(_color.White)
+	statusPainter *rexdemo.StatusPainter
+	statusBG      = _color.RGBA{R: bgRed, G: bgGreen, B: bgBlue, A: 255}
 
-	green  float32
-	touchX float32
-	touchY float32
+	green          float32
+	touchThreshold = 100 * time.Millisecond
+	touched        bool
+	touchTime      time.Time
+	touchX         float32
+	touchY         float32
 )
 
 func main() {
@@ -87,6 +93,8 @@ func main() {
 
 		demo = NewDemo()
 		client := room.NewClient(demo)
+		messages = make(chan room.Content, 1)
+		remotePt = make(chan RemotePoint, 1)
 
 		runClient := func(ctx context.Context, client *room.Client, server *room.ServerDisco) {
 			ip := server.Entry.AddrV4
@@ -103,6 +111,26 @@ func main() {
 			}
 			defer client.Send(ctx, room.String("DISCONNECT"))
 
+			clientShutdown := make(chan struct{})
+			mdone := make(chan struct{})
+			defer func() {
+				close(clientShutdown)
+			}()
+			go func() {
+				defer close(mdone)
+				for {
+					select {
+					case mc := <-messages:
+						err := client.Send(ctx, mc)
+						if err != nil {
+							log.Printf("[ERR] Sending message: %v", err)
+						}
+					case <-clientShutdown:
+						return
+					}
+				}
+			}()
+
 			next, err := client.Run(ctx, 0)
 			if err != nil {
 				log.Printf("[ERR] Event loop at index %d: %v", next, err)
@@ -116,6 +144,9 @@ func main() {
 		_server := server
 		for e := range a.Events() {
 			select {
+			case pt := <-remotePt:
+				touchX = float32(pt.X * float64(sz.WidthPx))
+				touchY = float32(pt.Y * float64(sz.HeightPx))
 			case chosen, ok := <-_server:
 				if !ok {
 					log.Printf("[ERR] No server found")
@@ -156,6 +187,23 @@ func main() {
 				// after this one is shown.
 				a.Send(paint.Event{})
 			case touch.Event:
+				if e.Type == touch.TypeEnd {
+					if touched && time.Since(touchTime) > touchThreshold {
+						touched = false
+					}
+					if !touched {
+						touched = true
+						touchTime = time.Now()
+						_x := float64(touchX) / float64(sz.WidthPx)
+						_y := float64(touchY) / float64(sz.HeightPx)
+						pt := fmt.Sprintf("%g,%g", _x, _y)
+						select {
+						case messages <- room.String(pt):
+							log.Printf("[INFO] Touch event sent")
+						default:
+						}
+					}
+				}
 				touchX = e.X
 				touchY = e.Y
 			}
@@ -185,6 +233,15 @@ func (c *DemoClient) HandleEvent(ctx context.Context, rc *room.Client, ev room.E
 		return
 	}
 	*c = _c
+
+	// try to update the local touch data... don't try too hard
+	// TODO: make this more resilient.
+	pt := RemotePoint{X: c.X, Y: c.Y}
+	select {
+	case remotePt <- pt:
+	default:
+	}
+
 	log.Printf("[INFO] Event: %s", ev.Data())
 }
 
@@ -218,11 +275,11 @@ func onStart(glctx gl.Context) {
 	images = glutil.NewImages(glctx)
 	fps = debug.NewFPS(images)
 
-	statusFont, statusFace, err = loadFont("Tuffy.ttf", statusFaceOpt)
+	statusFont, statusFace, err = exfont.LoadAsset("Tuffy.ttf", statusFaceOpt)
 	if err != nil {
 		log.Printf("[ERR] Failed to load status font: %v", err)
 	}
-	statusPainter = NewDemoStatusPainter(demo, statusFace, images)
+	statusPainter = rexdemo.NewStatusPainter(demo, statusFont, statusBG, images)
 
 	ifaces, err := net.Interfaces()
 	if err != nil {
@@ -246,7 +303,7 @@ func onStop(glctx gl.Context) {
 }
 
 func onPaint(glctx gl.Context, sz size.Event) {
-	glctx.ClearColor(1, 0, 0, 1)
+	glctx.ClearColor(float32(bgRed)/255, float32(bgGreen)/255, float32(bgBlue)/255, 1)
 	glctx.Clear(gl.COLOR_BUFFER_BIT)
 
 	glctx.UseProgram(program)
@@ -265,7 +322,7 @@ func onPaint(glctx gl.Context, sz size.Event) {
 	glctx.DrawArrays(gl.TRIANGLES, 0, vertexCount)
 	glctx.DisableVertexAttribArray(position)
 
-	statusPainter.Draw(sz)
+	statusPainter.Draw(sz, actionBarPad, statusFaceOpt)
 	fps.Draw(sz)
 }
 
@@ -301,90 +358,8 @@ void main() {
 	gl_FragColor = color;
 }`
 
-// DemoStatusPainter is an object responsible for rendering the demo status at the
-// top of the client UI.
-type DemoStatusPainter struct {
-	demo   *DemoClient
-	face   font.Face
-	frozen *rexdemo.Demo
-	sz     size.Event
-	image  *glutil.Image
-	images *glutil.Images
-}
-
-// NewDemoStatusPainter initializes and returns a DemoStatusPainter.
-func NewDemoStatusPainter(demo *DemoClient, face font.Face, images *glutil.Images) *DemoStatusPainter {
-	return &DemoStatusPainter{
-		demo:   demo,
-		face:   face,
-		images: images,
-	}
-}
-
-// Release calls Release on underlying gl elements.
-func (p *DemoStatusPainter) Release() {
-	p.image.Release()
-}
-
-// Draw renders the demo state to the screen
-func (p *DemoStatusPainter) Draw(sz size.Event) {
-	if sz.WidthPx == 0 && sz.HeightPx == 0 {
-		return
-	}
-	fsize := 12
-	pixY := int(float32(fsize+1) * sz.PixelsPerPt)
-	if p.sz != sz {
-		p.sz = sz
-		if p.image != nil {
-			p.image.Release()
-		}
-		p.image = p.images.NewImage(sz.WidthPx, pixY)
-	}
-
-	state := p.demo.State()
-	state.Mut = nil
-	if p.frozen == nil || (rexdemo.Demo)(*state) != *p.frozen {
-		// generate a current image
-		draw.Draw(p.image.RGBA, p.image.RGBA.Bounds(), statusBG, image.Pt(0, 0), draw.Over)
-
-		originX := 2
-		originY := pixY - 2
-
-		drawer := &font.Drawer{
-			Dst:  p.image.RGBA,
-			Src:  image.NewUniform(_color.Black),
-			Face: p.face,
-			Dot:  fixed.P(originX, originY),
-		}
-
-		text := fmt.Sprintf("%v Count=%d", state.Last, state.Counter)
-		drawer.DrawString(text)
-		p.image.Upload()
-	}
-	p.image.Draw(
-		sz,
-		geom.Point{X: 0, Y: 0},
-		geom.Point{X: sz.WidthPt, Y: 0},
-		geom.Point{X: 0, Y: geom.Pt(fsize) + 1},
-		p.image.RGBA.Bounds(),
-	)
-
-}
-
-func loadFont(path string, opt *truetype.Options) (*truetype.Font, font.Face, error) {
-	f, err := asset.Open(path)
-	if err != nil {
-		return nil, nil, err
-	}
-	defer f.Close()
-	raw, err := ioutil.ReadAll(f)
-	if err != nil {
-		return nil, nil, err
-	}
-	ttf, err := freetype.ParseFont(raw)
-	if err != nil {
-		return nil, nil, err
-	}
-	face := truetype.NewFace(ttf, opt)
-	return ttf, face, nil
+// RemotePoint is a touch event from another client
+type RemotePoint struct {
+	X float64
+	Y float64
 }

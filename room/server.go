@@ -200,6 +200,7 @@ func jsonMethodNotAllowed(allow ...string) string {
 
 func busEventsHandler(b *Bus) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		defer r.Body.Close()
 		if r.Method != "GET" {
 			w.Header().Set("Allow", "GET")
 			w.WriteHeader(http.StatusMethodNotAllowed)
@@ -236,7 +237,7 @@ func busEventsHandler(b *Bus) http.HandlerFunc {
 			ejs := newJSONEvent(event)
 			err := enc.Encode(ejs)
 			if err != nil {
-				log.Printf("[INFO] failed to deliver event to client: %v", err)
+				log.Printf("[INFO] Failed to deliver event to client: %v", err)
 				return
 			}
 		}
@@ -245,6 +246,7 @@ func busEventsHandler(b *Bus) http.HandlerFunc {
 
 func busMessagesHandler(b *Bus) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		defer r.Body.Close()
 		if r.Method != "POST" {
 			w.Header().Set("Allow", "POST")
 			w.WriteHeader(http.StatusMethodNotAllowed)

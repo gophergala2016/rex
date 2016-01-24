@@ -50,6 +50,7 @@ func LookupRoom(r *Room, servers chan<- *ServerDisco) error {
 	}()
 
 	params := mdns.DefaultParams(r.Service)
+	params.WantUnicastResponse = true
 	params.Entries = c
 	params.Timeout = 10 * time.Second
 	err := mdns.Query(params)
@@ -73,11 +74,11 @@ func NewZoneConfig(s *Server) (*ZoneConfig, error) {
 		Room: s.config.Room,
 	}
 
-	addr := s.Addr()
-	if addr == "" {
+	httpAddr := s.Addr()
+	if httpAddr == "" {
 		return nil, fmt.Errorf("server not bound to a port")
 	}
-	host, _port, err := net.SplitHostPort(addr)
+	host, _port, err := net.SplitHostPort(httpAddr)
 	if err != nil {
 		return nil, err
 	}
@@ -86,12 +87,13 @@ func NewZoneConfig(s *Server) (*ZoneConfig, error) {
 		if ip == nil {
 			return nil, fmt.Errorf("invalid host ip: %v", err)
 		}
-		zc.IPs = []net.IP{ip}
+		zc.IPs = append(zc.IPs, ip)
 	}
 	zc.Port, err = strconv.Atoi(_port)
 	if err != nil {
 		return nil, fmt.Errorf("invalid port: %v", err)
 	}
+	log.Printf("IPS: %v", zc.IPs)
 
 	return zc, nil
 }
