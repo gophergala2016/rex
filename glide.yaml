@@ -2,6 +2,7 @@ package: github.com/gophergala2016/rex
 import:
 - package: github.com/codegangsta/cli
 - package: github.com/bmatsuo/mdns
+- package: github.com/bmatsuo/uuid
 - package: golang.org/x/net
   subpackages:
   - /context

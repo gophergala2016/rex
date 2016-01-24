@@ -11,10 +11,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-// StatusClientConnected is a type of message that indicates the presence of a
-// new client.
-const StatusClientConnected = "ClientConnected"
-
 // Client is an interface to a remote REx server.
 type Client struct {
 	Host    string
