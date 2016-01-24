@@ -22,7 +22,7 @@ be lifted in the future but it simplifies the framework for now.
 The following sections describe how clients establish a connection with the
 server (discovery) and how messages/events are delivered between the two.  The
 bus uses HTTP as a transport protocol (though this is abstracted by the REx
-library).  The endpoints used for communication are described here but the
+framework).  The endpoints used for communication are described here but the
 content of requests and responses is not described.  Refer to the communication
 protocol [docs](protocol.md) for more information about HTTP entities involved
 in REx communication.
@@ -36,17 +36,15 @@ the port on which REx clients should connect.
 
 ###Client Sessions
 
-When a client is connecting to a server initially it needs to create a session
-that it will use in further communication.  A session may (and typically will)
-span multiple network connections.
+When a client is connecting to a server initially it creates a session that it
+will use as an identifier in further communication.  A session may (and
+typically will) span multiple network connections.
 
-The client creates a session for itself by issuing an HTTP request to the
-server bus.
-
-    POST /rex/v0/sessions HTTP/1.1
-
-Once a client has a unique session identifier returned by the server it can
-connect to the event bus and begin sending its own messages.
+Session IDs are unique strings.  Session IDs are currently generated client
+side as a (random) UUID, though this is not part of the protocol specification.
+The convention for the server is to associate the first string message sent
+using a new session id as the common name for the session (identifier other
+clients would see as a "user").
 
 ###Message Transport
 
@@ -63,8 +61,16 @@ cause events to be broadcast to all clients (including the message originator).
 All connected clients receive a stream of the server event log.  This stream is
 consumed from an HTTP endpoint as a chunked response.
 
-    GET /rex/v0/events HTTP/1.1
+    GET /rex/v0/events?start=0 HTTP/1.1
 
-Events and indexed and persist in the log for the application lifetime so
+Whener the client needs to reconnect to the event stream they make another
+request like above but update the **start** parameter to be the index of the
+first event they would like to receive.
+
+Events and indexed and will persist in the log for the application lifetime so
 clients clients may ensure (within reasonable limits) that they will consume
 all events in the order they were generated on the server.
+
+While the framework does not support it at this time, the server will
+eventually be able to perform both compaction and persistence for the event
+log to produce more robust applications.
