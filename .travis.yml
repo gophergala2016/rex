@@ -1,15 +1,11 @@
 language: go
-
 go:
   - 1.5
-
-sudo: required
 
 env:
   - GO15VENDOREXPERIMENT=1
 
 before_install:
-  - sudo apt-get install libgles2-mesa-dev
   - mkdir /tmp/bin
   - go get -u github.com/Masterminds/glide
   - wget -O /tmp/lark.tar.gz https://github.com/bmatsuo/lark/releases/download/v0.1.0/lark-0_1_0-linux-amd64.tar.gz
