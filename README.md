@@ -20,6 +20,21 @@ and money) are available.
 For more information about how a REx application works see the design
 [document](docs/design.md).
 
+##Features
+
+- Event/Message passing framework for state synchronization.  The framework is
+  pure Go so any desktop or mobile app should be able to make use of it for
+  low-throughput synchronization and message passing over a local network.
+
+- Game servers automatically bind the message bus to a port and make themselves
+  discoverable to clients on the local network.  Works on Android devices
+  (tested on Galaxy S6).  Untested for iOS.
+
+- Game clients automically discover servers and begin receiving their updates
+  events.  Works on Android devices (tested on Galaxy S6).  Untested for iOS.
+
+- Technical demo (with .apk files) showing discovery and state synchronization.
+
 ##Documentation
 
 The `docs/` directory contains various documents that describe the components
