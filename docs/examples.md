@@ -5,6 +5,14 @@ compelling game that begins to show the possibilities of shared applications
 utilizing companion apps to provide a "private" user interface in addition to
 the information on the shared TV screen.
 
+##Pre-compiled packages
+
+Precompiled android packages are provided for each
+[release](https://github.com/gophergala2016/rex/releases).  Users can download
+one of the "android" tarballs and load the included .apk files onto their
+Android devices with installing the `gomobile` and Android development
+toolchains.
+
 ##Setup (Android)
 
 To target a platform follow all the typical setup for standard development
