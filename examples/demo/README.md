@@ -26,6 +26,15 @@ update it's triangle's position to the touch position.
 
 ##Screenshots
 
+The following screenshots and photos show the server (red) and several
+connected clients (light blue).  The state (last message time, number of
+messages, and triangle position) are synchronized between all processes.
+
+This first image shows the applications running on the same desktop.
+
 ![Demo on desktop](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo.png)
+
+This image shows the server running on an Android TV and a computer running two
+connected clients.
 
 ![Demo on TV](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo-tv.jpg)
