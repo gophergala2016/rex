@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -31,7 +30,7 @@ func ServerMain(*cli.Context) {
 	background := context.Background()
 
 	log.Printf("[INFO] demo server initializing")
-	demo := &Demo{}
+	demo := NewDemo()
 	bus := room.NewBus(background, demo)
 	config := &room.ServerConfig{
 		Room: rexdemo.Room,
@@ -72,24 +71,27 @@ func ServerMain(*cli.Context) {
 	}
 }
 
-// Demo is the state of a demo server.
-type Demo struct {
-	mut     sync.Mutex
-	Counter int
-	Last    time.Time
+// DemoServer is the server side (source of truth) of the demo object.
+type DemoServer rexdemo.Demo
+
+// NewDemo wraps the result of rexdemo.NewDemo() as a DemoServer
+func NewDemo() *DemoServer {
+	return (*DemoServer)(rexdemo.NewDemo())
 }
 
 // HandleMessage adds to the message counter
-func (d *Demo) HandleMessage(ctx context.Context, msg room.Msg) {
-	d.mut.Lock()
-	defer d.mut.Unlock()
+func (d *DemoServer) HandleMessage(ctx context.Context, msg room.Msg) {
+	d.Mut.Lock()
+	defer d.Mut.Unlock()
 	d.Counter++
 	d.Last = time.Now()
 	log.Printf("[DEBUG] %v session %v %q", msg.Time(), msg.Session(), msg.Text())
 	log.Printf("[INFO] count: %d", d.Counter)
 
+	js, _ := json.Marshal(d)
+
 	go func() {
-		content := room.String(fmt.Sprintf("count: %d", d.Counter))
+		content := room.Bytes(js)
 		err := room.Broadcast(ctx, content)
 		if err != nil {
 			log.Printf("[ERR] %v", err)
