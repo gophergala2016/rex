@@ -11,10 +11,10 @@ similar to Nintendo's goals with the Wii U platform.  But the goal for REx is
 to provide a low barrier to entry by utilizing existing commodity phones and
 set-top boxes.
 
-This project contains examples to demonstrate the core technologies
-(unfortunately the full game demo had to be postponed!).  But, the core
-deliverable is the open source messaging framework that can be used to build
-more advanced games when more resources (i.e. time and money) are available.
+This project contains working example application to demonstrate the core
+technologies.  The core deliverable is the open source messaging framework that
+can be used to build more advanced games when more resources (i.e. time and
+money) are available.
 
 For more information about how a REx application works see the design
 [document](docs/design.md).
@@ -29,7 +29,7 @@ For more information about how a REx application works see the design
   discoverable to clients on the local network.  Works on Android devices
   (tested on Galaxy S6).  Untested for iOS.
 
-- Game clients automatically discover servers and begin receiving their updates
+- Game clients automatically discover servers and begin receiving their update
   events.  Works on Android devices (tested on Galaxy S6).  Untested for iOS.
 
 - Technical [demo](examples/demo) (with .apk files) showing discovery and state
@@ -108,18 +108,18 @@ And I wanted to build my first mobile application (and really my first game
 using GL graphics).  After looking over the gomobile project and how the
 development cycle goes I thought it would be possible to create a cool, shared
 interactive experience in a short amount of time, even with limited previous
-mobile/game development experience.
+experience with mobile/game development.
 
 ##Prior Art
 
 ###Games
 
-As alluded to in the introduction, the space being developed is not unexplored.
-Nintendo's [Wii U](http://www.nintendo.com/wiiu) is the most notable example of
-a game platform expanding into a complex "controller" architecture.  The Wii U
-has an intriguing story for the market.  But the economic barrier to entry for
-the platform is too high for many people.  And you can't write a Wii U game in
-pure Go!
+As alluded to in the introduction, the space being developed is not entirely
+unexplored.  Nintendo's [Wii U](http://www.nintendo.com/wiiu) is the most
+notable example of a game platform expanding into a complex "controller"
+architecture.  The Wii U has an intriguing story for the market.  But the
+economic barrier to entry for the platform is too high for many people.  And
+you can't write a Wii U game in pure Go!
 
 The concept of local discovery is not new in gaming.  Games have been doing
 this going back 20 years (hyperbolic-ish).  More recently in the mobile space
