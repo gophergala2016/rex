@@ -16,4 +16,4 @@ install:
   - glide install
 
 script:
-  - lark test
+  - lark travis
