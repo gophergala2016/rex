@@ -12,10 +12,10 @@ to provide a low barrier to entry by utilizing existing commodity phones and
 set-top boxes.
 
 This project delivers several examples to demonstrate the core technologies as
-well an provide an engaging (playable) multiplayer game experience to drive
-home the concept.  But, the core deliverable is the open source messaging
-framework that can be used to build more advanced games when more resources
-(i.e. time and money) are available.
+well provide an engaging (playable) multiplayer game experience to drive home
+the concept.  But, the core deliverable is the open source messaging framework
+that can be used to build more advanced games when more resources (i.e. time
+and money) are available.
 
 For more information about how a REx application works see the design
 [document](docs/design.md).
@@ -42,9 +42,10 @@ archives themselves.
 Honestly, I want to get together and play board games with my friends without
 having to spend all that money on physical pieces (and the effort/space to
 store and take care of them).  While many board games exist on mobile devices
-many don't offer a low friction multiplayer experience and often they lose some
-essence had playing the physical games with friends, sitting at a table.  It is
-exactly this feeling I am trying to replicate on a digital platform.  See [Prior Art](#prior-art) for more background.
+few offer a low friction multiplayer experience and often they lose an essence
+they had when played physically with friends, sitting at a table.  It is
+exactly this feeling I am trying to replicate on a digital platform.  See
+[Prior Art](#prior-art) for more background.
 
 ###Why write an application for a TV?
 
@@ -69,8 +70,8 @@ See the previous answer.  The REx architecture typically involves two
 applications being developed and sharing libraries.  What's more, there are
 multiple mobile platforms to target (and potentially multiple TV platforms).
 Any sane developer putting themselves in these circumstances would want
-cross-platform development libraries and tools.  Furthermore, the truly sane
-would ask not to use C(++) for all their development. Luckily these objects are
+cross-platform development libraries and tools.  The truly sane would go on to
+ask not to use C(++) for all their development. Luckily these objectives are
 inline with those of the ["gomobile"](https://github.com/golang/mobile) project
 (blessed by Google).  Go's cross-platform toolchain unifies iOS (tvOS?) and
 Android application development and allows a single team to maintain the entire
@@ -102,9 +103,9 @@ time, even with limited previous mobile and game development experience.
 As alluded to in the introduction, the space being developed is not unexplored.
 Nintendo's [Wii U](http://www.nintendo.com/wiiu) is the most notable example of
 a game platform expanding into a complex "controller" architecture.  The Wii U
-has an intriguing story for the market.  But the barrier to entry for the
-platform is high (higher than would be ideal).  And you can't write a Wii U
-game in pure Go!
+has an intriguing story for the market.  But the economic barrier to entry for
+the platform is too high for many people.  And you can't write a Wii U game in
+pure Go!
 
 The concept of local discovery is not new in gaming.  Games have been doing
 this going back 20 years (hyperbolic-ish).  More recently in the mobile space
