@@ -29,7 +29,7 @@ For more information about how a REx application works see the design
 
 - The framework intended to work across all mobile and TV platforms.  Android
   TV is just the best existing option.  With Apple TV now supporting custom
-  apps and as Go support on that device mature look forward to working demos
+  apps and as Go support on that device matures look forward to working demos
   built for that platform as well.
 
 - Game servers automatically bind the message bus to a port and make themselves
