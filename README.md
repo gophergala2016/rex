@@ -147,7 +147,17 @@ like Spaceteam to a new level.
 
 ###Collaboration and Productivity
 
-TODO
+Probably the most widely known LAN discovery based collaboration and
+productivity tool is Google's Chromecast (Google Cast technology in general).
+Using local network discovery devices can send streaming requests to Chromecast
+devices on the same network.  REx is heavily inspired by this architecture and
+could be used to emulate the Chromecast's functionality.
+
+Apple is another notable user of local discovery, authoring their own protocol
+called Bonjour. Bonjour is the discovery protocol powering several Apple
+services including Air Drop (a file transfer service).  The REx authors take
+inspiration from Apple's work developing a clean user experience and workflow
+for collaborating with colocated peers.
 
 ##Authors
 
