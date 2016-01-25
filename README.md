@@ -147,8 +147,8 @@ like Spaceteam to a new level.
 
 ###Collaboration and Productivity
 
-Probably the most widely known collaboration product to make use of local-only
-discovery is Google's Chromecast (Google Cast technology in general).  Using
+The most widely known collaboration product to make use of local-only discovery
+is probably Google's Chromecast (Google Cast technology in general).  Using
 local network discovery devices can send streaming requests to Chromecast
 devices on the same network.  REx is heavily inspired by this architecture and
 could be used to emulate the Chromecast's functionality.
