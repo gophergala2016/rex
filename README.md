@@ -77,9 +77,10 @@ See the previous answer.  I believe that a large shared place is key to
 replicating the board game experience in a fully digital application.  In this
 regard a TV functions almost identically to a table.  Furthermore the common
 shared space allows almost all **shared information** to be removed from the
-mobile interface.  This opens the possibility of implementing games involving
-more complex mechanics and player decision points revolving around **secrets**
-and **private information** (e.g. Poker, Magic: The Gathering, etc).
+mobile interface.  This can greatly help implementing games involving more
+complex mechanics and player decision points, especially those revolving around
+**secrets** and **private information** (e.g. Poker, Magic: The Gathering,
+etc).
 
 ###Why use mobile "companion" applications?
 
