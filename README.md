@@ -147,7 +147,7 @@ Renaissance](http://www.theguardian.com/technology/2014/nov/25/board-games-inter
 in recent years is evidence that local, in-person gaming utilizing a shared
 space can provide some experiences and feelings that are (as of yet)
 unattainable through internet based multiplayer experiences which are starkly
-impersonal (which remain as starkly impersonal as the rest of the internet).
+impersonal (as starkly impersonal as the rest of the internet).
 
 These are long trends of entertainment and the REx project intends on helping
 provide an evolution in the game space with rich in-person multiplayer
