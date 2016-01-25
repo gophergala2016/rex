@@ -28,8 +28,10 @@ For more information about how a REx application works see the design
   low-throughput synchronization and message passing over a local network.
 
 - Game servers automatically bind the message bus to a port and make themselves
-  discoverable to clients on the local network.  Works on Android devices
-  (tested on Galaxy S6).  Untested for iOS.
+  discoverable to clients on the local network.  The servers specifically
+  target Android TV boxes (Google Nexus Player, Nvidia Shield, etc). But should
+  work on any Android devices (tested on Nexus Player and Galaxy S6).  Untested
+  for iOS.
 
 - Game clients automatically discover servers and begin receiving their update
   events.  Works on Android devices (tested on Galaxy S6).  Untested for iOS.
