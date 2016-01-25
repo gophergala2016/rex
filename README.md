@@ -27,6 +27,11 @@ For more information about how a REx application works see the design
   pure Go so any desktop or mobile app should be able to make use of it for
   low-throughput synchronization and message passing over a local network.
 
+- The framework intended to work across all mobile and TV platforms.  Android
+  TV is just the best existing option.  With Apple TV now supporting custom
+  apps and as Go support on that device mature look forward to working demos
+  built for that platform as well.
+
 - Game servers automatically bind the message bus to a port and make themselves
   discoverable to clients on the local network.  The servers specifically
   target Android TV boxes (Google Nexus Player, Nvidia Shield, etc). But should
