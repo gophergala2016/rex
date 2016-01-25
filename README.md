@@ -13,7 +13,7 @@ similar to Nintendo's goals with the Wii U platform.  But the goal for REx is
 to provide a low barrier to entry by utilizing existing commodity phones and
 set-top boxes.
 
-This project contains working example application to demonstrate the core
+This project contains working example applications to demonstrate the core
 technologies.  The core deliverable is the open source messaging framework that
 can be used to build more advanced games when more resources (i.e. time and
 money) are available.
