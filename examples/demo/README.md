@@ -37,7 +37,7 @@ each device is up to date.
 
 ![Demo on desktop](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo.png)
 
-This image shows the server running on an Android TV and a computer running two
-connected clients.
+This image shows the server running on an Android TV (specifically, a Google
+Nexus Player set-top box) and a computer running two connected clients.
 
 ![Demo on TV](https://raw.githubusercontent.com/gophergala2016/rex/master/screenshots/demo-tv.jpg)
