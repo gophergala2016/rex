@@ -104,7 +104,7 @@ game platform.
 
 What's **more**, when an application grows to also require dynamic cloud-based
 applications Go easily extends it reach there and allows you develop along the
-virtuous path of Go servers connected with Go glue to serving mobile apps
+virtuous path of Go servers connected with Go glue to mobile frontend apps
 written in pure Go.  Bare metal feels so good.
 
 Hana Kim's [talk](https://www.youtube.com/watch?v=sQ6-HyPxHKg) from GopherCon
