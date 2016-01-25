@@ -171,7 +171,7 @@ for collaborating with colocated peers.
 Both examples here are centralized platforms and have limitations either in
 their application or the client operating system.  The REx author believes that
 even greater productivity and collaboration tools will appear when application
-developers are given an open, cross-platform framework and the tools tools for
+developers are given an open, cross-platform framework and the tools for
 harnessing local discovery-based mechanics in their own systems.
 
 ##Authors
