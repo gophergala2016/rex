@@ -34,7 +34,7 @@ For more information about how a REx application works see the design
 
 - Game servers automatically bind the message bus to a port and make themselves
   discoverable to clients on the local network.  The servers specifically
-  target Android TV boxes (Google Nexus Player, Nvidia Shield, etc). But should
+  target TV set-top boxes (Google Nexus Player, Nvidia Shield, etc). But should
   work on any Android devices (tested on Nexus Player and Galaxy S6).  Untested
   for iOS.
 
